@@ -1,0 +1,24 @@
+{
+  "Routes": [
+    {
+      "/": {
+        "Controller": "Home",
+        "Action": "Index",
+        "Variables": {}
+      }
+    },
+    {
+      "{...}": {
+        "Controller": "Packages",
+        "Action": "Get",
+        "Variables": "{...}"
+      }
+    }
+  ],
+  "Default": {
+    "Controller": "Home",
+    "Action": "Index",
+    "Variables": {
+    }
+  }
+}

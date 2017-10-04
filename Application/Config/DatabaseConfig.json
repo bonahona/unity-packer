@@ -1,0 +1,11 @@
+{
+  "Database": {
+    "UseDatabase": false,
+    "DatabaseType" : "PDO",
+    "Provider" : "mysql",
+    "Server" : "",
+    "Database" : "",
+    "Username" : "",
+    "Password" : ""
+  }
+}
