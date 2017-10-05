@@ -5,10 +5,6 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN apt-get update && apt-get install -y \
     git zlib1g-dev
 
-RUN docker-php-ext-install zip
-
-RUN docker-php-ext-install -j$(nproc) pdo pdo_mysql
-
 RUN a2enmod rewrite
 
 COPY . /var/www/html
