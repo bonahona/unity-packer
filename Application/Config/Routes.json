@@ -8,6 +8,13 @@
       }
     },
     {
+      "/ready": {
+        "Controller": "Utilities",
+        "Action": "Ready",
+        "Variables": {}
+      }
+    },
+    {
       "/file/{...}": {
         "Controller": "Packages",
         "Action": "File",
