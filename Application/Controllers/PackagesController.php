@@ -2,6 +2,7 @@
 
 const BASE_WORK_FOLDER = '/var/www/html/workfolder';
 const BASE_PACKAGE_FOLDER = 'package';
+const ASSETS_FOLDER = 'Assets/';
 const PACKAGE_ENDING = '.unitypackage';
 const META_ENDING = '.meta';
 
@@ -93,7 +94,7 @@ class PackagesController extends Controller
 
         $tarFile->addFromString($metaGuid . '/asset', $content);
         $tarFile->addFromString($metaGuid . '/asset.meta', $metaContent);
-        $tarFile->addFromString($metaGuid . '/pathname', $fileName);
+        $tarFile->addFromString($metaGuid . '/pathname', ASSETS_FOLDER . $fileName);
     }
 
     private function GetAssetHash($metaContent)
