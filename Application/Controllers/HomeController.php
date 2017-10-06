@@ -4,6 +4,7 @@ class HomeController extends Controller
 {
     public function Index()
     {
-        phpinfo();
+        $this->Title = 'Unity Packer';
+        return $this->View();
     }
 }
