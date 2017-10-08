@@ -9,14 +9,30 @@ const META_ENDING = '.meta';
 
 class PackagesController extends Controller
 {
-    public function Get($user = "", $package = "", $commit = '-SNAPSHOT')
+    public function Get($user = "", $package = "", $commit = "")
     {
         if($package == "" || $package == ""){
             return $this->HttpNotFound();
         }
 
-        $resultFile = $this->GetPackage($user, $package);
+        $resultFile = $this->GetPackage($user, $package, $commit);
+        if($resultFile === false){
+            return $this->Text("Not a valid unity package. No Asset folder found.");
+        }
         return $this->Redirect('/file/' . $resultFile);
+    }
+
+    public function Package($user = "", $package = "")
+    {
+        if($package == "" || $package == ""){
+            return $this->HttpNotFound();
+        }
+
+        $this->Title = $user . '/' . $package;
+        $repo = $this->DownloadPackage($user, $package);
+        $this->ResetRepository($repo, "");
+        $this->Set('Logs', $this->GetLogs($repo, $user, $package));
+        return $this->View();
     }
 
     public function File()
@@ -29,6 +45,23 @@ class PackagesController extends Controller
         return $response;
     }
 
+    private function GetLastCommit($repo)
+    {
+        $log = $repo->logs();
+        return $log[0]->hash;
+    }
+
+    private function GetLogs($repo, $user, $package)
+    {
+        $logs = $repo->logs();
+        foreach($logs as $log){
+            $log->user = $user;
+            $log->package = $package;
+        }
+
+        return $logs;
+    }
+
     private function CreatePackageUrl($user, $package)
     {
         return 'https://github.com/' . $user . '/' . $package . '.git';
@@ -39,9 +72,9 @@ class PackagesController extends Controller
         return BASE_WORK_FOLDER . '/' . $user . '/' . $package;
     }
 
-    private function GetTarName($packageName)
+    private function GetTarName($packageName, $commit)
     {
-        return BASE_PACKAGE_FOLDER . '/' . $packageName . PACKAGE_ENDING;
+        return BASE_PACKAGE_FOLDER . '/' . $packageName . $commit . PACKAGE_ENDING;
     }
 
     private function GetAssetFolder($workFolder)
@@ -54,9 +87,8 @@ class PackagesController extends Controller
         return $assetFolder;
     }
 
-    private function GetPackage($user, $package)
+    private function DownloadPackage($user, $package)
     {
-
         $packageUrl = $this->CreatePackageUrl($user, $package);
         $workFolder = $this->CreateWorkFolder($user, $package);
 
@@ -65,18 +97,46 @@ class PackagesController extends Controller
             $repo->pull('origin');
         }else {
             \Cz\Git\GitRepository::cloneRepository($packageUrl, $workFolder);
+            $repo = new \Cz\Git\GitRepository($workFolder);
+        }
+
+        return $repo;
+    }
+
+    private function ResetRepository($repo, $commit)
+    {
+        $repo->reset($commit);
+    }
+
+    private function GetPackage($user, $package, $commit)
+    {
+        $workFolder = $this->CreateWorkFolder($user, $package);
+
+        $repo = $this->DownloadPackage($user, $package);
+
+        if($commit == ""){
+            $commit = $this->GetLastCommit($repo);
+            $this->ResetRepository($repo, $commit);
         }
 
         $assetFolder = $this->GetAssetFolder($workFolder);
-        $packageName = $this->GetTarName($package);
+        if($assetFolder === false){
+            return false;
+        }
+
+        $packageName = $this->GetTarName($package, $commit);
         $this->PackFolder($assetFolder . '/', $packageName);
 
         return $packageName;
-        //return $this->GetFile($zipName);
     }
 
     private function PackFolder(String $folder, String $tarFileName)
     {
+        // If the file already exists, there is no need to repack it
+        if(file_exists($tarFileName)){
+            return;
+        }
+
         $files = $this->GetAllFiles($folder, '');
 
         $tarFile = new PharData($tarFileName);
@@ -117,7 +177,7 @@ class PackagesController extends Controller
         $result = array();
 
         foreach (scandir($folder) as $file) {
-            if(!($file == '.' || $file == '..' || endsWith($file,'.meta'))) {
+            if(!($file == '.' || $file == '..' || endsWith($file,'.meta') || startsWith($file, '.'))) {
                 $filePath = $folder . '/' . $file;
                 if($root == ''){
                     $localFilePath = $file;
@@ -135,5 +195,15 @@ class PackagesController extends Controller
         }
 
         return $result;
+    }
+
+    public function GetCommitLink($logEntry)
+    {
+        return '/get/' . $logEntry->user . '/' . $logEntry->package . '/' . $logEntry->hash;
+    }
+
+    public function GetCommitFileName($logEntry)
+    {
+        return $logEntry->package;
     }
 }

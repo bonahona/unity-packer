@@ -349,8 +349,50 @@
 				->end();
 		}
 
+        /**
+         * Gets a list of log entries
+         * `git log`
+         * @return Cz\Git\GitLogEntry[]
+         */
+		public function logs()
+        {
+            $result = array();
+            chdir($this->repository);
+            exec("git log", $output);
+            $lastHash = "";
+            foreach($output as $line){
+                if(strpos($line, 'commit') === 0){
+                    $hash = trim(substr($line, strlen('commit')));
+                    $lastHash = $hash;
+                    $result[$lastHash] = new GitLogEntry();
+                    $result[$lastHash]->hash = $hash;
+                }else if(strpos($line, 'Author') === 0){
+                    $result[$lastHash]->author = substr($line, strlen('Author:'));
+                }else if(strpos($line, 'Date') === 0){
+                    $result[$lastHash]->date = substr($line, strlen('Date:'));
+                }else {
+                    $result[$lastHash]->message .= $line;
+                }
+            }
 
-		/**
+            return $result;
+        }
+
+        /**
+         * Resets the repo to a specific commit
+         * `git reset --hard <commit>`
+         * @return self
+         */
+        public function reset($commit)
+        {
+           $this->begin()
+               ->run('git reset --hard ' . $commit)
+               ->end();
+            return $this;
+        }
+
+
+        /**
 		 * Exists changes?
 		 * `git status` + magic
 		 * @return bool
@@ -698,7 +740,7 @@
 
 			if($returnCode !== 0)
 			{
-				throw new GitException("Git clone failed (directory $directory).");
+				throw new GitException("Git clone failed (directory $directory, url $url).");
 			}
 
 			return new static($directory);

@@ -71,6 +71,7 @@ class ComposerStaticInit339aa35e153f4041304673501f543d7d
 
     public static $classMap = array (
         'Cz\\Git\\GitException' => __DIR__ . '/..' . '/czproject/git-php/src/IGit.php',
+        'Cz\\Git\\GitLogEntry' => __DIR__ . '/..' . '/czproject/git-php/src/GitLogEntry.php',
         'Cz\\Git\\GitRepository' => __DIR__ . '/..' . '/czproject/git-php/src/GitRepository.php',
         'Cz\\Git\\IGit' => __DIR__ . '/..' . '/czproject/git-php/src/IGit.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',

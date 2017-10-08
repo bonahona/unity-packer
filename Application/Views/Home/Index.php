@@ -1,5 +1,7 @@
 <?php /** @var $this HomeControllerController */ ?>
 
+<h1><?php echo $this->Title;?></h1>
+
 <div class="row">
     <div class="col-lg-4 col-xs-12">
         <div class="row">
@@ -15,7 +17,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <h3>Usage</h3>
-                <p>To get the project <a href="http://github.com/bonahona/bonaunityessentials" target="_blank">Github/bonahona/bonaunityessentials</a> enter the url <a href="/bonahona/bonaunityessentials">unitypacker.fyrvall.com/bonahona/bonaunityessentials</a>.</p>
+                <p>To get the project <a href="http://github.com/bonahona/bonaunityessentials" target="_blank">Github/bonahona/bonaunityessentials</a> enter the url <a href="/get/bonahona/bonaunityessentials">unitypacker.fyrvall.com/bonahona/bonaunityessentials</a>.</p>
+                <p>You can also look at <a href="/package/bonahona/bonaunityessentials">Package/Bonahona/BonaUnityEssentials</a> to see all commit and download a package of a previous release.</p>
             </div>
         </div>
     </div>

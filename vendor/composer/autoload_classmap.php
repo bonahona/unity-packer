@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Cz\\Git\\GitException' => $vendorDir . '/czproject/git-php/src/IGit.php',
+    'Cz\\Git\\GitLogEntry' => $vendorDir . '/czproject/git-php/src/GitLogEntry.php',
     'Cz\\Git\\GitRepository' => $vendorDir . '/czproject/git-php/src/GitRepository.php',
     'Cz\\Git\\IGit' => $vendorDir . '/czproject/git-php/src/IGit.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',

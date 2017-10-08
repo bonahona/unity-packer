@@ -268,10 +268,11 @@ class Controller
         return $result;
     }
 
-    protected function HttpStatus($statusCode)
+    protected function HttpStatus($statusCode, $text = "")
     {
         $result = new HttpResult();
         $result->ReturnCode = $statusCode;
+        $result->Content = $text;
 
         return $result;
     }

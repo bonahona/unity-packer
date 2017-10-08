@@ -15,6 +15,13 @@
       }
     },
     {
+      "/package/{...}": {
+        "Controller": "Packages",
+        "Action": "Package",
+        "Variables": "{...}"
+      }
+    },
+    {
       "/file/{...}": {
         "Controller": "Packages",
         "Action": "File",
@@ -22,7 +29,7 @@
       }
     },
     {
-      "{...}": {
+      "/get/{...}": {
         "Controller": "Packages",
         "Action": "Get",
         "Variables": "{...}"
